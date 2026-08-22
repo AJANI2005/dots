@@ -1,0 +1,176 @@
+### Variables
+
+set $mod Mod4
+set $term foot
+set $menu fuzzel
+set $dmenu wmenu-run
+set $browser firefox 
+set $filemanager thunar
+
+set $left h
+set $down j
+set $up k
+set $right l
+
+include /etc/sway/config-vars.d/*
+
+
+### Appearance
+default_border none
+default_floating_border none
+
+gaps inner 6
+gaps outer 0
+
+
+### Displays
+
+output eDP-1 resolution 1920x1080@144hz position 0,0
+output HDMI-A-1  transform 180 resolution 1920x1080 position -1920,0
+
+
+### Input
+
+input "1267:12410:ELAN1203:00_04F3:307A_Touchpad" {
+dwt enabled
+tap enabled
+natural_scroll enabled
+middle_emulation enabled
+}
+
+## Wallpaper (awww)
+exec awww-daemon
+
+### Idle
+exec ~/.config/sway/scripts/idle.sh
+bindsym $mod+Shift+i exec ~/.config/sway/scripts/toggle-idle.sh
+
+
+### Applications
+
+bindsym $mod+Return exec $term
+bindsym $mod+space exec $menu
+bindsym $mod+d exec $dmenu
+bindsym $mod+b exec $browser
+bindsym $mod+e exec $filemanager
+
+
+bindsym $mod+q kill
+bindsym $mod+Shift+c reload
+
+floating_modifier $mod normal
+
+
+### Focus
+
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+
+### Move windows
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+
+### Workspaces
+
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10
+
+
+### Layout
+
+# bindsym $mod+b splith
+# bindsym $mod+v splitv
+
+bindsym $mod+v layout stacking
+bindsym $mod+t layout tabbed
+bindsym $mod+s layout toggle split
+
+bindsym $mod+f fullscreen toggle
+bindsym $mod+w floating toggle
+bindsym $mod+Shift+w focus mode_toggle
+bindsym $mod+a focus parent
+
+
+### Scratchpad
+
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+
+### Resize
+
+mode "resize" {
+	bindsym $left resize shrink width 10px
+		bindsym $down resize grow height 10px
+		bindsym $up resize shrink height 10px
+		bindsym $right resize grow width 10px
+
+		bindsym Left resize shrink width 10px
+		bindsym Down resize grow height 10px
+		bindsym Up resize shrink height 10px
+		bindsym Right resize grow width 10px
+
+		bindsym Return mode "default"
+		bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+
+### Volume
+
+bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+
+### Brightness
+
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+
+
+### Screenshot
+
+bindsym  Mod1+S exec grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png
+bindsym Shift+Mod1+S exec grim -g "$(slurp)" - | wl-copy
+
+include /home/$USER/.config/sway/bar
+include /etc/sway/config.d/*
