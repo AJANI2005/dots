@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DOTS="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+CONFIG="$HOME/.config"
+IGNORE_FILE="$DOTS/.dotignore"
+
+mkdir -p "$CONFIG"
+
+should_ignore() {
+    local name="$1"
+
+    [ ! -f "$IGNORE_FILE" ] && return 1
+
+    while IFS= read -r pattern; do
+        # Skip empty lines and comments
+        [[ -z "$pattern" || "$pattern" == \#* ]] && continue
+
+        if [[ "$name" == $pattern ]]; then
+            return 0
+        fi
+    done < "$IGNORE_FILE"
+
+    return 1
+}
+
+for item in "$DOTS"/*; do
+    [ -e "$item" ] || [ -L "$item" ] || continue
+
+    name="${item##*/}"
+
+    if should_ignore "$name"; then
+        echo "IGNORED: $name"
+        continue
+    fi
+
+    target="$CONFIG/$name"
+
+    if [ -e "$target" ] || [ -L "$target" ]; then
+        echo "SKIPPED: $target already exists"
+        continue
+    fi
+
+    ln -s "$item" "$target"
+    echo "LINKED: $target -> $item"
+done

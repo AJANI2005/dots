@@ -1,0 +1,12 @@
+# .dotignore
+
+# Installer/scripts
+install
+.dotignore
+
+# Git
+.git
+.gitignore
+
+# Files/directories you don't want linked
+README.md
