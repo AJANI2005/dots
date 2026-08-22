@@ -16,6 +16,7 @@ alias ll='ls -lah'
 alias la='ls -A'
 alias l='ls -CF'
 alias c='clear'
+alias aptui="$HOME/.config/scripts/aptui.sh"
 
 # Editor
 export EDITOR='nvim'
