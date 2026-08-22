@@ -3,34 +3,19 @@ set -euo pipefail
 
 DOTS="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG="$HOME/.config"
-IGNORE_FILE="$DOTS/.dotignore"
 
 mkdir -p "$CONFIG"
 
-should_ignore() {
-    local name="$1"
+if [ "$#" -eq 0 ]; then
+    echo "Usage: $0 <item> [item ...]" >&2
+    exit 1
+fi
 
-    [ ! -f "$IGNORE_FILE" ] && return 1
+for name in "$@"; do
+    item="$DOTS/$name"
 
-    while IFS= read -r pattern; do
-        # Skip empty lines and comments
-        [[ -z "$pattern" || "$pattern" == \#* ]] && continue
-
-        if [[ "$name" == $pattern ]]; then
-            return 0
-        fi
-    done < "$IGNORE_FILE"
-
-    return 1
-}
-
-for item in "$DOTS"/*; do
-    [ -e "$item" ] || [ -L "$item" ] || continue
-
-    name="${item##*/}"
-
-    if should_ignore "$name"; then
-        echo "IGNORED: $name"
+    if [ ! -e "$item" ] && [ ! -L "$item" ]; then
+        echo "NOT FOUND: $item" >&2
         continue
     fi
 
