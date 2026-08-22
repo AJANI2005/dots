@@ -17,6 +17,7 @@ alias la='ls -A'
 alias l='ls -CF'
 alias c='clear'
 alias aptui="$HOME/.config/scripts/aptui.sh"
+alias lg='lazygit'
 
 # Editor
 export EDITOR='nvim'
