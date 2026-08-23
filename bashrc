@@ -25,6 +25,6 @@ export VISUAL='nvim'
 
 # Start Sway from a TTY
 if [[ -z "$WAYLAND_DISPLAY" && "$(tty)" == "/dev/tty1" ]]; then
-    exec sway
+    exec sway --unsupported-gpu
 fi
 
