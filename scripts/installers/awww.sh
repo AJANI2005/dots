@@ -76,6 +76,13 @@ install_awww() {
 
     echo
     "$INSTALL_DIR/awww" --version
+    
+    echo "==> Coping to /usr/local/bin"
+    sudo chmod 755 /usr/local/bin/awww
+    sudo cp target/release/awww /usr/local/bin/awww
+
+    sudo chmod 755 /usr/local/bin/awww-daemon
+    sudo cp target/release/awww-daemon /usr/local/bin/awww-daemon
 }
 
 uninstall_awww() {
