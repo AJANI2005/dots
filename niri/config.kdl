@@ -1,267 +1,137 @@
-// ============================================================
-// Variables / Applications
-// ============================================================
 
-// Niri uses KDL and does not have Sway-style `set` variables.
-// Commands are therefore written directly in the binds.
-
-// Terminal: foot
-// Launcher: fuzzel
-// dmenu replacement: wmenu-run
-// Browser: firefox
-// File manager: thunar
-
-
-// ============================================================
-// Appearance / Layout
-// ============================================================
 
 layout {
-    gaps 6
-
-    // Similar to your Sway:
-    // default_border none
-    // default_floating_border none
-
-    border {
-        off
-    }
-
-    focus-ring {
-        off
-    }
-
-    // Niri is a scrolling layout, so there is no direct
-    // splith/splitv equivalent.
-
-    // Keep the focused column from automatically centering.
-    center-focused-column "never"
+  gaps 6
+  border {
+    off
+  }
+  focus-ring {
+    off
+  }
+  center-focused-column "never"
 }
 
 
-// ============================================================
-// Displays
-// ============================================================
-
 output "eDP-1" {
-    mode "1920x1080@144"
-    position x=0 y=0
+  mode "1920x1080@144"
+  position x=0 y=0
 }
 
 output "HDMI-A-1" {
-    mode "1920x1080"
-    transform "180"
-    position x=-1920 y=0
+  mode "1920x1080"
+  transform "180"
+  position x=-1920 y=0
 }
 
 
-// ============================================================
-// Input
-// ============================================================
 
 input {
-    touchpad {
-        dwt
-        tap
-        natural-scroll
-        middle-emulation
-    }
+  touchpad {
+    dwt
+    tap
+    natural-scroll
+    middle-emulation
+  }
 }
 
-
-// ============================================================
-// Wallpaper
-// ============================================================
 
 spawn-at-startup "awww-daemon"
-
-
-// ============================================================
-// Idle
-// ============================================================
-
 spawn-at-startup "~/.config/sway/scripts/idle.sh"
 
-
-// ============================================================
-// Applications
-// ============================================================
-
 binds {
-    // Terminal
-    Mod+Return { spawn "foot"; }
+  Mod+Return { spawn "foot"; }
 
-    // Launcher
-    Mod+Space { spawn "fuzzel"; }
+  Mod+Space { spawn "fuzzel"; }
 
-    // wmenu
-    Mod+D { spawn "wmenu-run"; }
+  Mod+D { spawn "wmenu-run"; }
 
-    // Browser
-    Mod+B { spawn "firefox"; }
+  Mod+B { spawn "firefox"; }
 
-    // File manager
-    Mod+E { spawn "thunar"; }
+  Mod+E { spawn-sh "thunar"; }
 
+  Mod+Q { close-window; }
 
-    // ========================================================
-    // Window management
-    // ========================================================
+  Mod+H { focus-column-left; }
+  Mod+J { focus-window-down; }
+  Mod+K { focus-window-up; }
+  Mod+L { focus-column-right; }
 
-    Mod+Q { close-window; }
+  Mod+Left { focus-column-left; }
+  Mod+Down { focus-window-down; }
+  Mod+Up { focus-window-up; }
+  Mod+Right { focus-column-right; }
 
-    Mod+Shift+C { reload-config; }
+  Mod+Shift+H { move-column-left; }
+  Mod+Shift+J { move-window-down; }
+  Mod+Shift+K { move-window-up; }
+  Mod+Shift+L { move-column-right; }
 
+  Mod+Shift+Left { move-column-left; }
+  Mod+Shift+Down { move-window-down; }
+  Mod+Shift+Up { move-window-up; }
+  Mod+Shift+Right { move-column-right; }
 
-    // ========================================================
-    // Focus
-    // ========================================================
+  Mod+1 { focus-workspace 1; }
+  Mod+2 { focus-workspace 2; }
+  Mod+3 { focus-workspace 3; }
+  Mod+4 { focus-workspace 4; }
+  Mod+5 { focus-workspace 5; }
+  Mod+6 { focus-workspace 6; }
+  Mod+7 { focus-workspace 7; }
+  Mod+8 { focus-workspace 8; }
+  Mod+9 { focus-workspace 9; }
+  Mod+0 { focus-workspace 10; }
 
-    Mod+H { focus-column-left; }
-    Mod+J { focus-window-down; }
-    Mod+K { focus-window-up; }
-    Mod+L { focus-column-right; }
-
-    Mod+Left { focus-column-left; }
-    Mod+Down { focus-window-down; }
-    Mod+Up { focus-window-up; }
-    Mod+Right { focus-column-right; }
-
-
-    // ========================================================
-    // Move windows
-    // ========================================================
-
-    Mod+Shift+H { move-column-left; }
-    Mod+Shift+J { move-window-down; }
-    Mod+Shift+K { move-window-up; }
-    Mod+Shift+L { move-column-right; }
-
-    Mod+Shift+Left { move-column-left; }
-    Mod+Shift+Down { move-window-down; }
-    Mod+Shift+Up { move-window-up; }
-    Mod+Shift+Right { move-column-right; }
-
-
-    // ========================================================
-    // Workspaces
-    // ========================================================
-
-    Mod+1 { focus-workspace 1; }
-    Mod+2 { focus-workspace 2; }
-    Mod+3 { focus-workspace 3; }
-    Mod+4 { focus-workspace 4; }
-    Mod+5 { focus-workspace 5; }
-    Mod+6 { focus-workspace 6; }
-    Mod+7 { focus-workspace 7; }
-    Mod+8 { focus-workspace 8; }
-    Mod+9 { focus-workspace 9; }
-    Mod+0 { focus-workspace 10; }
-
-    Mod+Shift+1 { move-column-to-workspace 1; }
-    Mod+Shift+2 { move-column-to-workspace 2; }
-    Mod+Shift+3 { move-column-to-workspace 3; }
-    Mod+Shift+4 { move-column-to-workspace 4; }
-    Mod+Shift+5 { move-column-to-workspace 5; }
-    Mod+Shift+6 { move-column-to-workspace 6; }
-    Mod+Shift+7 { move-column-to-workspace 7; }
-    Mod+Shift+8 { move-column-to-workspace 8; }
-    Mod+Shift+9 { move-column-to-workspace 9; }
-    Mod+Shift+0 { move-column-to-workspace 10; }
+  Mod+Shift+1 { move-column-to-workspace 1; }
+  Mod+Shift+2 { move-column-to-workspace 2; }
+  Mod+Shift+3 { move-column-to-workspace 3; }
+  Mod+Shift+4 { move-column-to-workspace 4; }
+  Mod+Shift+5 { move-column-to-workspace 5; }
+  Mod+Shift+6 { move-column-to-workspace 6; }
+  Mod+Shift+7 { move-column-to-workspace 7; }
+  Mod+Shift+8 { move-column-to-workspace 8; }
+  Mod+Shift+9 { move-column-to-workspace 9; }
+  Mod+Shift+0 { move-column-to-workspace 10; }
 
 
-    // ========================================================
-    // Layout
-    // ========================================================
+  Mod+Shift+F { fullscreen-window; }
+  Mod+F { maximize-window-to-edges; }
 
-    // Fullscreen
-    Mod+F { fullscreen-window; }
+  Mod+W { toggle-window-floating; }
 
-    // Floating
-    Mod+W { toggle-window-floating; }
+  Mod+Shift+W { switch-focus-between-floating-and-tiling; }
 
-    // Focus floating/tiled
-    Mod+Shift+W { switch-focus-between-floating-and-tiling; }
+  XF86AudioMute allow-when-locked=true {
+    spawn-sh "pactl set-sink-mute @DEFAULT_SINK@ toggle";
+  }
 
-    // Focus parent equivalent isn't directly applicable
-    // to Niri's scrolling layout.
+  XF86AudioLowerVolume allow-when-locked=true {
+    spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ -5%";
+  }
 
+  XF86AudioRaiseVolume allow-when-locked=true {
+    spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ +5%";
+  }
 
-    // ========================================================
-    // Scratchpad
-    // ========================================================
+  XF86AudioMicMute allow-when-locked=true {
+    spawn-sh "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
+  }
 
-    // Niri doesn't have Sway's scratchpad action.
-    //
-    // A scratchpad can instead be implemented with a named
-    // workspace and window rules.
+  XF86MonBrightnessDown allow-when-locked=true {
+    spawn "brightnessctl" "set" "5%-";
+  }
 
+  XF86MonBrightnessUp allow-when-locked=true {
+    spawn "brightnessctl" "set" "5%+";
+  }
 
-    // ========================================================
-    // Volume
-    // ========================================================
-
-    XF86AudioMute allow-when-locked=true {
-        spawn-sh "pactl set-sink-mute @DEFAULT_SINK@ toggle";
-    }
-
-    XF86AudioLowerVolume allow-when-locked=true {
-        spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ -5%";
-    }
-
-    XF86AudioRaiseVolume allow-when-locked=true {
-        spawn-sh "pactl set-sink-volume @DEFAULT_SINK@ +5%";
-    }
-
-    XF86AudioMicMute allow-when-locked=true {
-        spawn-sh "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
-    }
-
-
-    // ========================================================
-    // Brightness
-    // ========================================================
-
-    XF86MonBrightnessDown allow-when-locked=true {
-        spawn "brightnessctl" "set" "5%-";
-    }
-
-    XF86MonBrightnessUp allow-when-locked=true {
-        spawn "brightnessctl" "set" "5%+";
-    }
-
-
-    // ========================================================
-    // Screenshot
-    // ========================================================
-
-    // Niri has built-in screenshot support.
-    //
-    // Set screenshot-path below to the same directory and use
-    // Niri's screenshot-screen / screenshot-window actions.
-
-    Mod+Alt+S {
-        screenshot;
-    }
+  Mod+Alt+S {
+    screenshot;
+  }
 }
-
-
-// ============================================================
-// Screenshot storage
-// ============================================================
 
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
 
-// ============================================================
-// Includes
-// ============================================================
 
-// Niri uses:
-// include "file.kdl"
-//
-// If you have converted equivalents of your Sway config-vars,
-// add them here.
-//
-// include "/etc/niri/config.d/*.kdl"
 

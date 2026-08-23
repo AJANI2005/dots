@@ -24,10 +24,10 @@ export EDITOR='nvim'
 export VISUAL='nvim'
 
 # Start Window Manager from TTY
-# if [[ -z "$WAYLAND_DISPLAY" && "$(tty)" == "/dev/tty1" ]]; then
-#     exec sway --unsupported-gpu
-# fi
-
 if [[ -z "$WAYLAND_DISPLAY" && "$(tty)" == "/dev/tty1" ]]; then
-    exec niri-session
+    exec sway --unsupported-gpu
 fi
+
+# if [[ -z "$WAYLAND_DISPLAY" && "$(tty)" == "/dev/tty1" ]]; then
+#     exec niri-session
+# fi

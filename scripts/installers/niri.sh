@@ -1,201 +1,146 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -e
 
-# ============================================================
-# Niri source build
-#
-# Build directory: /tmp
-# Install prefix:  /opt/niri
-#
-# Usage:
-#   sudo ./niri-build.sh install
-#   sudo ./niri-build.sh uninstall
-#
-# ============================================================
-
-PROJECT="niri"
-REPO="https://github.com/YaLTeR/niri.git"
 PREFIX="/opt/niri"
+BUILD="/tmp/niri-build"
+REF="${NIRI_REF:-main}"
 
-BUILD_ROOT="$(mktemp -d /tmp/niri-build.XXXXXX)"
-SOURCE_DIR="${BUILD_ROOT}/${PROJECT}"
+install() {
+    sudo apt update
 
-cleanup() {
-    rm -rf "$BUILD_ROOT"
-}
-trap cleanup EXIT
-
-require_root() {
-    if [[ "$EUID" -ne 0 ]]; then
-        echo "ERROR: This script must be run with sudo."
-        echo
-        echo "Usage:"
-        echo "  sudo $0 install"
-        echo "  sudo $0 uninstall"
-        exit 1
-    fi
-}
-
-install_dependencies() {
-    echo "==> Installing build dependencies..."
-
-    apt-get update
-
-    apt-get install -y \
+    sudo apt install -y \
+        build-essential \
+        clang \
+        pkg-config \
         git \
         curl \
-        build-essential \
-        pkg-config \
-        libwayland-dev \
-        wayland-protocols \
-        libinput-dev \
         libudev-dev \
-        libxkbcommon-dev \
-        libegl-dev \
-        libgles-dev \
-        libdrm-dev \
         libgbm-dev \
-        libseat-dev \
-        libpipewire-0.3-dev \
-        libfontconfig1-dev \
-        libfreetype6-dev \
+        libxkbcommon-dev \
+        libegl1-mesa-dev \
+        libwayland-dev \
+        libinput-dev \
         libdbus-1-dev \
         libsystemd-dev \
+        libseat-dev \
+        libpipewire-0.3-dev \
         libpango1.0-dev \
-        libglib2.0-dev \
-        libpixman-1-dev \
-        scdoc
+        libdisplay-info-dev \
+        xwayland \
+        xdg-desktop-portal \
+        xdg-desktop-portal-gtk 
 
-    if ! command -v rustc >/dev/null 2>&1 || \
-       ! command -v cargo >/dev/null 2>&1; then
-
-        echo
-        echo "==> Rust/Cargo not found."
-        echo "==> Installing Rust using rustup..."
-
-        apt-get install -y rustup
-
-        rustup default stable
+    if ! command -v cargo >/dev/null; then
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        source "$HOME/.cargo/env"
     fi
-}
 
-build_niri() {
-    echo
-    echo "============================================================"
-    echo " Building Niri"
-    echo "============================================================"
-    echo
-    echo "Temporary build directory:"
-    echo "  $BUILD_ROOT"
-    echo
+    rm -rf "$BUILD"
+    git clone --depth 1 --branch "$REF" \
+        https://github.com/niri-wm/niri.git "$BUILD"
 
-    echo "==> Cloning Niri..."
-
-    git clone \
-        --depth 1 \
-        "$REPO" \
-        "$SOURCE_DIR"
-
-    cd "$SOURCE_DIR"
-
-    echo "==> Rust version:"
-    rustc --version
-
-    echo "==> Cargo version:"
-    cargo --version
-
-    echo
-    echo "==> Building Niri..."
-
+    cd "$BUILD"
     cargo build --release
 
-    echo
-    echo "==> Installing Niri to:"
-    echo "    $PREFIX"
-    echo
+    sudo mkdir -p \
+        "$PREFIX/bin" \
+        "$PREFIX/share/wayland-sessions" \
+        "$PREFIX/share/xdg-desktop-portal" \
+        "$PREFIX/lib/systemd/user"
 
-    install -d "$PREFIX/bin"
-
-    install -m 0755 \
+    sudo install -Dm755 \
         target/release/niri \
         "$PREFIX/bin/niri"
 
-    # Install desktop/session files if they exist.
-    if [[ -d resources ]]; then
-        mkdir -p "$PREFIX/share"
+    sudo install -Dm755 \
+        resources/niri-session \
+        "$PREFIX/bin/niri-session"
 
-        cp -a resources/. "$PREFIX/share/" || true
-    fi
+    sudo install -Dm644 \
+        resources/niri.desktop \
+        "$PREFIX/share/wayland-sessions/niri.desktop"
 
-    echo
-    echo "==> Creating environment wrapper..."
+    sudo install -Dm644 \
+        resources/niri-portals.conf \
+        "$PREFIX/share/xdg-desktop-portal/niri-portals.conf"
 
-    cat > "$PREFIX/bin/niri-env" <<'EOF'
-#!/usr/bin/env bash
+    sudo install -Dm644 \
+        resources/niri.service \
+        "$PREFIX/lib/systemd/user/niri.service"
 
-export PATH="/opt/niri/bin:$PATH"
+    sudo install -Dm644 \
+        resources/niri-shutdown.target \
+        "$PREFIX/lib/systemd/user/niri-shutdown.target"
 
-exec /opt/niri/bin/niri "$@"
-EOF
+    sudo sed -i \
+        's#ExecStart=/usr/bin/niri#ExecStart=/usr/local/bin/niri#' \
+        "$PREFIX/lib/systemd/user/niri.service"
 
-    chmod +x "$PREFIX/bin/niri-env"
+    sudo mkdir -p \
+        /usr/local/bin \
+        /usr/local/share/wayland-sessions \
+        /usr/local/lib/systemd/user \
+        /usr/share/xdg-desktop-portal
 
-    echo
-    echo "============================================================"
-    echo " Niri installed successfully"
-    echo "============================================================"
-    echo
-    echo "Binary:"
-    echo "  $PREFIX/bin/niri"
-    echo
-    echo "Run:"
-    echo "  $PREFIX/bin/niri"
-    echo
-    echo "The temporary build directory has been removed."
-    echo
+    sudo ln -sfn \
+        "$PREFIX/bin/niri" \
+        /usr/local/bin/niri
+
+    sudo ln -sfn \
+        "$PREFIX/bin/niri-session" \
+        /usr/local/bin/niri-session
+
+    sudo ln -sfn \
+        "$PREFIX/share/wayland-sessions/niri.desktop" \
+        /usr/local/share/wayland-sessions/niri.desktop
+
+    sudo ln -sfn \
+        "$PREFIX/lib/systemd/user/niri.service" \
+        /usr/local/lib/systemd/user/niri.service
+
+    sudo ln -sfn \
+        "$PREFIX/lib/systemd/user/niri-shutdown.target" \
+        /usr/local/lib/systemd/user/niri-shutdown.target
+
+    sudo ln -sfn \
+        "$PREFIX/share/xdg-desktop-portal/niri-portals.conf" \
+        /usr/share/xdg-desktop-portal/niri-portals.conf
+
+    rm -rf "$BUILD"
+
+    systemctl --user daemon-reload 2>/dev/null || true
+
+    echo "Niri installed: $(readlink -f /usr/local/bin/niri)"
 }
 
-uninstall_niri() {
-    echo "==> Removing Niri from:"
-    echo "    $PREFIX"
+uninstall() {
+    systemctl --user stop niri.service 2>/dev/null || true
+    systemctl --user disable niri.service 2>/dev/null || true
 
-    if [[ -d "$PREFIX" ]]; then
-        rm -rf "$PREFIX"
-        echo "Removed $PREFIX"
-    else
-        echo "Niri is not installed at $PREFIX"
-    fi
+    sudo rm -f \
+        /usr/local/bin/niri \
+        /usr/local/bin/niri-session \
+        /usr/local/share/wayland-sessions/niri.desktop \
+        /usr/local/lib/systemd/user/niri.service \
+        /usr/local/lib/systemd/user/niri-shutdown.target \
+        /usr/share/xdg-desktop-portal/niri-portals.conf
 
-    echo
-    echo "============================================================"
-    echo " Niri has been removed"
-    echo "============================================================"
-    echo
-    echo "No Debian packages were removed."
+    sudo rm -rf "$PREFIX"
+
+    systemctl --user daemon-reload 2>/dev/null || true
+
+    echo "Niri uninstalled."
 }
 
-usage() {
-    echo "Usage:"
-    echo
-    echo "  sudo $0 install"
-    echo "  sudo $0 uninstall"
-    echo
-}
-
-case "${1:-}" in
+case "${1:-install}" in
     install)
-        require_root
-        install_dependencies
-        build_niri
+        install
         ;;
-
-    uninstall)
-        require_root
-        uninstall_niri
+    uninstall|remove)
+        uninstall
         ;;
-
     *)
-        usage
+        echo "Usage: $0 [install|uninstall]"
         exit 1
         ;;
 esac
