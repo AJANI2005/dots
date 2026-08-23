@@ -56,7 +56,7 @@ while true; do
             packages=$(installed_packages) || continue
             [ -z "$packages" ] && continue
 
-            sudo apt remove $packages
+            sudo apt remove --purge --autoremove $packages
             ;;
 
         "Search & install")
