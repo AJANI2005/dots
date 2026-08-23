@@ -172,5 +172,4 @@ bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 bindsym  Mod1+S exec grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +'%Y-%m-%d_%H-%M-%S').png
 bindsym Shift+Mod1+S exec grim -g "$(slurp)" - | wl-copy
 
-include /home/$USER/.config/sway/bar
 include /etc/sway/config.d/*
