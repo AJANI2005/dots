@@ -23,8 +23,11 @@ alias lg='lazygit'
 export EDITOR='nvim'
 export VISUAL='nvim'
 
-# Start Sway from a TTY
-if [[ -z "$WAYLAND_DISPLAY" && "$(tty)" == "/dev/tty1" ]]; then
-    exec sway --unsupported-gpu
-fi
+# Start Window Manager from TTY
+# if [[ -z "$WAYLAND_DISPLAY" && "$(tty)" == "/dev/tty1" ]]; then
+#     exec sway --unsupported-gpu
+# fi
 
+if [[ -z "$WAYLAND_DISPLAY" && "$(tty)" == "/dev/tty1" ]]; then
+    exec niri-session
+fi
