@@ -76,10 +76,6 @@ install_awww() {
 
     echo
     "$INSTALL_DIR/awww" --version
-    
-    echo "==> Coping to /usr/local/bin"
-    sudo cp target/release/awww /usr/local/bin/awww
-    sudo cp target/release/awww-daemon /usr/local/bin/awww-daemon
 }
 
 uninstall_awww() {
@@ -93,6 +89,11 @@ uninstall_awww() {
     echo
     echo "awww has been removed from:"
     echo "$INSTALL_DIR"
+
+    
+    echo "==> Removing from to /usr/local/bin"
+    sudo rm /usr/local/bin/awww
+    sudo rm /usr/local/bin/awww-daemon
 }
 
 reinstall_awww() {
