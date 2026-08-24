@@ -4,6 +4,5 @@ if [ "$(tty)" = "/dev/tty1" ]  &&  [ -z "$WAYLAND_DISPLAY" ]; then
 fi
 
 # Containers
-alias dev=~/ContainerFiles/devbox/devbox.sh
-
+alias dev=~/dots/containers/devbox
 alias dnf-list="dnf repoquery --userinstalled | less"
