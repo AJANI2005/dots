@@ -1,33 +1,11 @@
-# ~/.bashrc
-
-# Interactive shell only
-[[ $- != *i* ]] && return
-
-# PATH
-export PATH="$HOME/.local/bin:$PATH"
-
-# History
-HISTSIZE=10000
-HISTFILESIZE=20000
-HISTCONTROL=ignoreboth
-
-# Useful aliases
-alias ll='ls -lah'
-alias la='ls -A'
-alias l='ls -CF'
-alias c='clear'
-alias aptui="$HOME/.config/scripts/aptui.sh"
-alias lg='lazygit'
-
-# Editor
-export EDITOR='nvim'
-export VISUAL='nvim'
-
-# Start Window Manager from TTY
-if [[ -z "$WAYLAND_DISPLAY" && "$(tty)" == "/dev/tty1" ]]; then
-    exec sway --unsupported-gpu
+# Start Mango Compositor
+if [ "$(tty)" = "/dev/tty1" ]  &&  [ -z "$WAYLAND_DISPLAY" ]; then
+	exec mango
 fi
 
-# if [[ -z "$WAYLAND_DISPLAY" && "$(tty)" == "/dev/tty1" ]]; then
-#     exec niri-session
-# fi
+# Podman alias
+alias dev=~/ContainerFiles/devbox/devbox.sh
+function nvim() { dev nvim $@; }
+function lg() { dev lazygit $@; }
+
+alias dnf-list="dnf repoquery --userinstalled | less"
