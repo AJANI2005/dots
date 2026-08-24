@@ -3,9 +3,12 @@ if [ "$(tty)" = "/dev/tty1" ]  &&  [ -z "$WAYLAND_DISPLAY" ]; then
 	exec mango
 fi
 
-# Podman alias
+# Containers
 alias dev=~/ContainerFiles/devbox/devbox.sh
-function nvim() { dev nvim $@; }
-function lg() { dev lazygit $@; }
+commands=(nvim lazygit fzf)
+
+for cmd in ${commands[@]}; do
+	eval "function $cmd { dev $cmd \"\$@\"; };"
+done
 
 alias dnf-list="dnf repoquery --userinstalled | less"
