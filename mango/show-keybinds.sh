@@ -7,4 +7,5 @@ awk -F'[=,]' '/^(bind|mousebind)=/ {
     cmd = cmd "," $i
 
     printf "%s + %s  ->  %s\n", $2, $3, cmd
-  }' "$CONFIG" | fzf
+  }' "$CONFIG"  | fzf
+
