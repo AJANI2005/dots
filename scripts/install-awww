@@ -1,0 +1,34 @@
+#!/usr/bin/bash
+
+cat > /tmp/dockerfile << 'EOF'
+  FROM fedora:latest
+
+  # Dependencies
+  RUN dnf install -y \
+  git \
+  wayland-devel \
+  wayland-protocols-devel \
+  pkgconf-pkg-config \
+  rust \
+  cargo \
+  lz4-devel
+
+  RUN git clone https://codeberg.org/LGFae/awww.git /awww
+  WORKDIR /awww
+
+  # Build
+  RUN cargo build --release
+
+  # Move Binaries
+  RUN mkdir /artifacts && \
+      cp target/release/awww /artifacts/awww && \
+      cp target/release/awww-daemon /artifacts/awww-daemon
+EOF
+
+podman build -t awww-install:v1 -f /tmp/dockerfile &&
+podman run --rm \
+    -v "$HOME/.local/bin:/out" \
+    awww-install:v1 \
+    bash -c 'cp -r /artifacts/* /out/'
+
+rm /tmp/dockerfile
