@@ -4,10 +4,12 @@ if [ "$(tty)" = "/dev/tty1" ]  &&  [ -z "$WAYLAND_DISPLAY" ]; then
 fi
 
 # Helper aliases
-#
+
 # Containers
 alias dnf-list="dnf repoquery --userinstalled | less"
 alias nvim="dev nvim \$@"
+alias v="dev nvim \$@"
+alias lg="dev lazygit \$@"
 
 dev() {
 	folder="$(basename $PWD)"
