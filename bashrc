@@ -7,20 +7,12 @@ fi
 
 # Containers
 alias dnf-list="dnf repoquery --userinstalled | less"
-alias nvim="dev nvim \$@"
-alias v="dev nvim \$@"
-alias lg="dev lazygit \$@"
 
 dev() {
-	folder="$(basename $PWD)"
-	podman run --rm -it \
-		--hostname=dev \
-		--security-opt label=disable \
-		--secret github-token,type=env,target=GITHUB_TOKEN \
-		-w "/workspace/$folder" \
-		-v "$PWD:/workspace/$folder" \
-		-v dev-nvim:/root/.local/share/nvim \
-		-v dev-nvim:/root/.local/state/nvim \
-		dev:latest "$@"
+podman run --rm -it \
+    --userns=keep-id \
+    --security-opt label=disable \
+    -v "$PWD:/workspace" \
+    -w /workspace \
+    dev:v1
 }
-
