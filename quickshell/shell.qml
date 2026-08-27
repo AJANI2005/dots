@@ -3,7 +3,7 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 import "./components" as Components
-import "./panels" as Panels
+//import "./panels" as Panels
 
 Scope {
 	// no more time object
