@@ -8,8 +8,8 @@ alias dnf-list="dnf repoquery --userinstalled | less"
 alias ll='ls -la'
 alias l='ls -la'
 
-alias nvim="db nvim $@"
-alias lg="db lazygit $@"
+alias nvim="d nvim $@"
+alias lg="d lazygit $@"
 
 # PS1
 export PS1='\[\e[32m\]\u@\h\[\e[0m\]:\[\e[34m\]\w\[\e[0m\]\n\$ '
