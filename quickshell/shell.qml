@@ -3,7 +3,7 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 import "./components" as Components
-//import "./panels" as Panels
+// import "./panels" as Panels
 
 Scope {
 	// no more time object
@@ -13,7 +13,8 @@ Scope {
 	Variants {
 		model: Quickshell.screens
 
-		PanelWindow {
+    PanelWindow {
+      id: bar
 			required property var modelData
 			screen: modelData
 
@@ -29,7 +30,8 @@ Scope {
 			Components.Workspaces {}
 			Components.Clock { 
 				anchors.horizontalCenter: parent.horizontalCenter
-			}
+      }
+
 
 
 		}
