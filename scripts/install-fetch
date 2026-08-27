@@ -1,0 +1,46 @@
+#!/usr/bin/bash
+
+cat > /tmp/dockerfile << 'EOF'
+FROM fedora-minimal:latest
+
+RUN microdnf install -y \
+    bash \
+    git \
+    gcc \
+    make \
+    fastfetch \
+    patchelf \
+    && microdnf clean all
+
+# Build fetch
+RUN git clone https://github.com/areofyl/fetch.git /fetch
+WORKDIR /fetch
+
+RUN make
+
+# Collect artifacts and fastfetch dependencies
+RUN mkdir -p /artifacts/lib && \
+    cp fetch /artifacts/fetch && \
+    cp "$(command -v fastfetch)" /artifacts/fastfetch && \
+    ldd "$(command -v fastfetch)" | \
+        awk '/=> \// {print $3} /^\// {print $1}' | \
+        xargs -r -I{} cp -L {} /artifacts/lib/ && \
+    patchelf --set-rpath '$ORIGIN/../lib' /artifacts/fastfetch
+EOF
+
+if podman build -t fetch-install:v1 -f /tmp/dockerfile; then
+    podman run --rm \
+        --security-opt label=disable \
+        -v "$HOME/.local/bin:/out" \
+        -v "$HOME/.local/lib:/libout" \
+        fetch-install:v1 \
+        bash -c '
+            cp /artifacts/fetch /out/
+            cp /artifacts/fastfetch /out/
+            cp /artifacts/lib/* /libout/
+        '
+
+    podman rmi fetch-install:v1
+fi
+
+rm -f /tmp/dockerfile

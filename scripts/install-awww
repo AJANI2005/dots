@@ -1,34 +1,40 @@
 #!/usr/bin/bash
 
 cat > /tmp/dockerfile << 'EOF'
-  FROM fedora:latest
+FROM fedora-minimal:latest
 
-  # Dependencies
-  RUN dnf install -y \
-  git \
-  wayland-devel \
-  wayland-protocols-devel \
-  pkgconf-pkg-config \
-  rust \
-  cargo \
-  lz4-devel
+RUN microdnf install -y \
+    git \
+    ca-certificates \
+    wayland-devel \
+    wayland-protocols-devel \
+    pkgconf-pkg-config \
+    rust \
+    cargo \
+    lz4-devel \
+    && microdnf clean all
 
-  RUN git clone https://codeberg.org/LGFae/awww.git /awww
-  WORKDIR /awww
+RUN git clone https://codeberg.org/LGFae/awww.git /awww
+WORKDIR /awww
 
-  # Build
-  RUN cargo build --release
+# Build
+RUN cargo build --release
 
-  # Move Binaries
-  RUN mkdir /artifacts && \
-      cp target/release/awww /artifacts/awww && \
-      cp target/release/awww-daemon /artifacts/awww-daemon
+# Move binaries
+RUN mkdir /artifacts && \
+    cp target/release/awww /artifacts/awww && \
+    cp target/release/awww-daemon /artifacts/awww-daemon
 EOF
 
-podman build -t awww-install:v1 -f /tmp/dockerfile &&
-podman run --rm \
-    -v "$HOME/.local/bin:/out" \
-    awww-install:v1 \
-    bash -c 'cp -r /artifacts/* /out/'
+if podman build -t awww-install:v1 -f /tmp/dockerfile; then
+    podman run --rm \
+        --security-opt label=disable \
+        -v "$HOME/.local/bin:/out" \
+        awww-install:v1 \
+        bash -c 'cp -r /artifacts/* /out/'
 
-rm /tmp/dockerfile
+    # Remove build image
+    podman rmi awww-install:v1
+fi
+
+rm -f /tmp/dockerfile
