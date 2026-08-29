@@ -1,12 +1,14 @@
 import Quickshell
 import Quickshell.Io
 import QtQuick
-import "Theme"
+import "./Theme"
 
 Item {
   id: workspaces
   property string focusedWorkspace: "1"
-  property string activeWorkspaces: ["1"]
+  property var activeWorkspaces: ["1"]
+  anchors.verticalCenter: parent.verticalCenter
+  height: parent.height
 
   Timer {
     interval: 100
@@ -22,11 +24,14 @@ Item {
     id: getWorkspace
     command: [
       "sh", "-c",
-      "mmsg get all-tags | jq -r '.all_tags[].tags[] | select(.client_count > 0) | .index' | tr '\n' ' '"
+      "mmsg get all-tags 2>/dev/null | jq -r '.all_tags[].tags[] | select(.client_count > 0) | .index' | tr '\n' ' ' || echo '1'"
     ]
     stdout: StdioCollector {
       onStreamFinished: {
-        workspaces.activeWorkspaces = text.trim().split(" ")
+        let res = text.trim()
+        if (res !== "") {
+            workspaces.activeWorkspaces = res.split(" ")
+        }
       }
     }
   }
@@ -35,26 +40,43 @@ Item {
     id: getFocusedWorkspace
     command: [
       "sh", "-c",
-      "mmsg get all-tags | jq -r '.all_tags[].tags[] | select(.is_active) | .index'"
+      "mmsg get all-tags 2>/dev/null | jq -r '.all_tags[].tags[] | select(.is_active) | .index' || echo '1'"
     ]
     stdout: StdioCollector {
       onStreamFinished: {
-        workspaces.focusedWorkspace = text.trim()
+        let res = text.trim()
+        if (res !== "") {
+            workspaces.focusedWorkspace = res
+        }
       }
     }
   }
 
+  implicitWidth: wsRow.implicitWidth
+  implicitHeight: wsRow.implicitHeight
+
   Row{
-    spacing: 15 
+    id: wsRow
+    spacing: 2 
+    anchors.verticalCenter: parent.verticalCenter
     Repeater {
         model: 9
-        Text {
-          property bool is_focused : String(model.index) == workspaces.focusedWorkspace
-          visible: workspaces.activeWorkspaces.includes(model.index)
-          text: model.index 
-          color: is_focused ? Theme.active : Theme.inactive
-          font.family: Theme.fontFamily
-          font.bold: is_focused 
+        Rectangle {
+            id: wsRect
+            property bool is_focused : String(model.index + 1) == workspaces.focusedWorkspace
+            visible: true
+            width: 14
+            height: 14
+            color: "transparent"
+
+            Text {
+                anchors.centerIn: parent
+                text: model.index + 1
+                color: wsRect.is_focused ? Theme.active : Theme.inactiveFg
+                font.family: Theme.fontFamily
+                font.pixelSize: 11
+                font.bold: wsRect.is_focused
+            }
         }
     }
   }

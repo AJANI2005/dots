@@ -3,13 +3,9 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 import "./components" as Components
-// import "./panels" as Panels
 
 Scope {
-	// no more time object
-	property color bgCol: "#aa1b1b1b"
-
-
+  property var theme: Components.Theme
 	Variants {
 		model: Quickshell.screens
 
@@ -24,16 +20,26 @@ Scope {
 				right: true
 			}
 
-			color: bgCol
-			implicitHeight: 16 
+			color: theme.panelBg
+			height: 26 
 
-			Components.Workspaces {}
-			Components.Clock { 
-				anchors.horizontalCenter: parent.horizontalCenter
-      }
+			Item {
+				anchors.fill: parent
+				anchors.leftMargin: 16
+				anchors.rightMargin: 16
 
-
-
+				Components.Workspaces {
+					anchors.verticalCenter: parent.verticalCenter
+					anchors.left: parent.left
+				}
+				Components.Clock { 
+					anchors.centerIn: parent
+      	}
+				Components.NetworkBluetooth {
+					anchors.verticalCenter: parent.verticalCenter
+					anchors.right: parent.right
+				}
+			}
 		}
 	}
 }
