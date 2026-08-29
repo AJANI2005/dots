@@ -28,16 +28,32 @@ Scope {
 				anchors.leftMargin: 16
 				anchors.rightMargin: 16
 
-				Components.Workspaces {
+				Row {
 					anchors.verticalCenter: parent.verticalCenter
 					anchors.left: parent.left
+					spacing: 8
+
+					Components.Launcher {
+						anchors.verticalCenter: parent.verticalCenter
+					}
+					Components.Workspaces {
+						anchors.verticalCenter: parent.verticalCenter
+					}
 				}
 				Components.Clock { 
 					anchors.centerIn: parent
       	}
-				Components.NetworkBluetooth {
+				Row {
 					anchors.verticalCenter: parent.verticalCenter
 					anchors.right: parent.right
+					spacing: 16
+
+					Components.Battery {
+						anchors.verticalCenter: parent.verticalCenter
+					}
+					Components.NetworkBluetooth {
+						anchors.verticalCenter: parent.verticalCenter
+					}
 				}
 			}
 		}
