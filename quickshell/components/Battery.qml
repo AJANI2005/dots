@@ -25,7 +25,7 @@ Item {
 
     Process {
         id: batProc
-        command: ["sh", Qt.resolvedUrl("battery.sh").toString().replace("file://", "")]
+        command: ["sh", Qt.resolvedUrl("../scripts/battery.sh").toString().replace("file://", "")]
         stdout: StdioCollector {
             onStreamFinished: {
                 let lines = text.trim().split('\n')

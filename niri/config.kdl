@@ -43,9 +43,7 @@ binds {
 
   Mod+Space { spawn "fuzzel"; }
 
-  Mod+D { spawn "wmenu-run"; }
-
-  Mod+B { spawn "firefox"; }
+Mod+D { spawn "wmenu-run"; }
 
   Mod+E { spawn-sh "thunar"; }
 

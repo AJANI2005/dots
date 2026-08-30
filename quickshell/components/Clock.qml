@@ -37,12 +37,16 @@ Item {
     id: clockRow
     spacing: 8
     anchors.centerIn: parent
+
     Rectangle {
-      width: clockTextRow.implicitWidth + 12
-      height: 18
-      radius: 9
+      id: clockContainer
+      width: clockTextRow.implicitWidth + 16
+      height: 22
+      radius: 4
       color: "transparent"
       anchors.verticalCenter: parent.verticalCenter
+
+      
 
       Row {
         id: clockTextRow
@@ -50,7 +54,7 @@ Item {
         anchors.centerIn: parent
         Text {
           text: "󰥔"
-          color: Theme.active
+          color: Theme.fg
           font.family: Theme.fontFamily
           font.pixelSize: Theme.fontSize
           anchors.verticalCenter: parent.verticalCenter
@@ -63,6 +67,8 @@ Item {
           anchors.verticalCenter: parent.verticalCenter
         }
       }
+
+      
     }
   }
 }

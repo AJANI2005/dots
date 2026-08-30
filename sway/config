@@ -4,7 +4,7 @@ set $mod Mod4
 set $term foot
 set $menu fuzzel
 set $dmenu wmenu-run
-set $browser firefox 
+set $browser 
 set $filemanager thunar
 
 set $left h

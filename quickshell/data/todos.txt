@@ -1,0 +1,3 @@
+0|Add idle behaviour
+0|Add lockscreen
+0|setup obsidian
