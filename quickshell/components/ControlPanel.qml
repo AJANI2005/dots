@@ -155,7 +155,7 @@ PanelWindow {
             icon: "󰌾"
             detailValue: "SECURE"
             detailSub: "LOCK WORKSTATION"
-            actionCmd: "loginctl lock-session"
+            actionCmd: "pgrep -x swaylock >/dev/null || swaylock"
         }
         ListElement {
             title: "STANDBY MODE"

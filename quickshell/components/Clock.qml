@@ -24,7 +24,7 @@ Item {
     id: getDate
     command: [
       "sh", "-c",
-      "date '+%a %b %d  %H:%M'"
+      "date '+%a %b %d  %I:%M %p'"
     ]
     stdout: StdioCollector {
       onStreamFinished: {
