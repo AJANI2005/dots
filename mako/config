@@ -1,37 +1,38 @@
 anchor=top-right
-
-width=360
-height=100
-
-margin=18
-padding=14
+width=380
+height=110
+margin=20
+padding=16
 
 border-size=1
-border-radius=12
+border-radius=16
 
-font=0xProto Nerd Font 11
+font=0xProto Nerd Font 10
 
-background-color=#18181b
-text-color=#fafafa
-border-color=#27272a
+background-color=#121214ee
+text-color=#e4e4e7
+border-color=#27272a88
 
-default-timeout=3500
-
+default-timeout=4000
 icons=1
-max-icon-size=42
+max-icon-size=48
 
 layer=overlay
+markup=1
+actions=1
 
 [urgency=low]
-background-color=#18181b
+background-color=#121214ee
 text-color=#a1a1aa
+border-color=#27272a66
 
 [urgency=normal]
-background-color=#18181b
-text-color=#fafafa
+background-color=#121214ee
+text-color=#e4e4e7
+border-color=#27272a88
 
 [urgency=high]
-background-color=#18181b
-text-color=#ffffff
-border-color=#52525b
+background-color=#181216ee
+text-color=#f43f5e
+border-color=#f43f5b88
 default-timeout=0

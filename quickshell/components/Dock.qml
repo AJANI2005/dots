@@ -30,6 +30,18 @@ Scope {
             property var clientList: []
 
             Timer {
+                id: inactivityTimer
+                interval: 1000
+                running: dockWindow.isHovered
+                repeat: false
+                onTriggered: {
+                    if (!bottomTrigger.containsMouse && !dockArea.containsMouse) {
+                        dockWindow.isHovered = false
+                    }
+                }
+            }
+
+            Timer {
                 interval: 250
                 running: true
                 repeat: true
@@ -65,6 +77,11 @@ Scope {
                 height: dockWindow.isHovered ? parent.height : 5
                 hoverEnabled: true
                 onEntered: dockWindow.isHovered = true
+                onPositionChanged: {
+                    if (dockWindow.isHovered) {
+                        inactivityTimer.restart()
+                    }
+                }
             }
 
             Item {
@@ -97,6 +114,9 @@ Scope {
                     function onIsHoveredChanged() {
                         if (dockWindow.isHovered) {
                             animState.active = true
+                            inactivityTimer.restart()
+                        } else {
+                            inactivityTimer.stop()
                         }
                     }
                 }
@@ -114,6 +134,9 @@ Scope {
                     anchors.fill: parent
                     hoverEnabled: true
                     acceptedButtons: Qt.NoButton
+                    onPositionChanged: {
+                        inactivityTimer.restart()
+                    }
                     onExited: {
                         if (!bottomTrigger.containsMouse) {
                             dockWindow.isHovered = false

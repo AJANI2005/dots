@@ -230,8 +230,6 @@ PanelWindow {
             Rectangle {
               anchors.fill: parent
               color: Theme.bg
-              border.color: isSelected ? Theme.active : Theme.inactive
-              border.width: isSelected ? 4 : 1
               radius: 12
               clip: true
 
