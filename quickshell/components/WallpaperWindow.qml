@@ -22,7 +22,7 @@ PanelWindow {
     right: true
   }
 
-  property string wallpaperDir: "/home/ajani/dots/wallpapers"
+  property string wallpaperDir: "/home/ajani/wallpapers"
 
   ListModel {
     id: wallpaperModel
