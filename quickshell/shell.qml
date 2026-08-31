@@ -59,6 +59,9 @@ Scope {
                     anchors.right: parent.right
                     spacing: 16
 
+                    Components.ControlPanelIcon {
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
                     Components.TodoIcon {
                         anchors.verticalCenter: parent.verticalCenter
                     }
@@ -90,6 +93,21 @@ Scope {
         }
     }
 
-
+    Components.ControlPanel {
+        isOpen: rootScope.controlPanelOpen
+        onCloseRequested: {
+            rootScope.controlPanelOpen = false
+        }
+    }
     Components.Dock {}
+
+    IpcHandler {
+      target: "controlPanel"
+      function toggle(): void { rootScope.controlPanelOpen = !rootScope.controlPanelOpen; }
+    }
+
+    IpcHandler {
+      target: "wallpaperSwitcher"
+      function toggle(): void { rootScope.wallpaperOpen = !rootScope.wallpaperOpen }
+    }
 }

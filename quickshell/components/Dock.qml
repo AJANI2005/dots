@@ -22,7 +22,8 @@ Scope {
 
             color: "transparent"
             exclusionMode: ExclusionMode.Ignore
-            height: (dockWindow.clientList.length > 0 && (dockWindow.isHovered || animState.active)) ? 80 : 0
+            implicitHeight: (dockWindow.clientList.length > 0 && (dockWindow.isHovered || animState.active)) ? 80 : 0
+            height: implicitHeight
             visible: dockWindow.clientList.length > 0
 
             property bool isHovered: false
